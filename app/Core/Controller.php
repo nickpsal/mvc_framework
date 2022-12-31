@@ -8,4 +8,11 @@
                 require "../app/Views/404.view.php";
             }
         }
+
+        public function req_files($view) {
+            $filename = "../app/Views/includes/" . $view . ".php";
+            if (file_exists($filename)) {
+                require $filename;
+            }
+        }
     }
