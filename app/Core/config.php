@@ -3,7 +3,7 @@
     define("APP_DESC", "MVC Framework Version 2");
     define("DEBUG", true);
     if ($_SERVER['SERVER_NAME'] == '127.0.0.1' or  $_SERVER['SERVER_NAME'] == 'localhost') {
-        define('ROOT', 'http://127.00.1/mvc_framework/public');
+        define('ROOT', 'http://127.0.0.1/mvc_framework/public');
         define('URL', 'http://127.0.0.1/mvc_framework');
         define('DB_HOST', 'localhost');
         define('DB_USER', 'root');
