@@ -1,1 +1,1 @@
-<h1>Hine Controller</h1>
+<h1>Home Controller</h1>

@@ -1,4 +1,5 @@
 <?php
+    defined('ROOTPATH') OR exit('Access Denied!');
     define("APP_NAME", "MVC Framework");
     define("APP_DESC", "MVC Framework Version 2");
     define("DEBUG", true);

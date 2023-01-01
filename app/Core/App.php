@@ -1,4 +1,5 @@
 <?php
+    defined('ROOTPATH') OR exit('Access Denied!');
     class App{
         private $controller = 'Home';
         private $method = 'index';
@@ -22,6 +23,10 @@
                 }
             }
             call_user_func_array([$controller, $this->method], [$url]);
+        }
+
+        public function getMethod() {
+            return $this->method;
         }
 
         private function splitURL() {

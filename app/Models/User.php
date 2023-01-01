@@ -1,4 +1,5 @@
 <?php
+    defined('ROOTPATH') OR exit('Access Denied!');
     class User {
         use Model;
         protected $db_table = 'users';

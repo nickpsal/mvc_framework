@@ -1,4 +1,5 @@
 <?php
+    defined('ROOTPATH') OR exit('Access Denied!');
     trait Database {
         private function connect() {
             $string = "mysql:hostname=" . DB_HOST . ";dbname="  . DB_NAME;

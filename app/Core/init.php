@@ -1,4 +1,5 @@
 <?php
+    defined('ROOTPATH') OR exit('Access Denied!');
     require "config.php";
     require "functions.php";
     require "Database.php";
