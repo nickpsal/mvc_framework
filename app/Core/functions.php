@@ -142,3 +142,45 @@
         return "";
     }
 
+    /** returns a user readable date format 
+     * converts 2023-10-28 to 28th octomber 2023 **/
+    function get_date($date){
+        return date("jS M, Y",strtotime($date));
+    }
+
+    /** converts images from text editor content to actual files **/
+    function remove_images_from_content($content, $folder = "uploads/"){
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+            file_put_contents($folder . "index.php", "Access Denied!");
+        }
+        //remove images from content
+        preg_match_all('/<img[^>]+>/', $content, $matches);
+        $new_content = $content;
+        if (is_array($matches) && count($matches) > 0) {
+            $image_class = new \Model\Image();
+            foreach ($matches[0] as $match) {
+                if (strstr($match, "http")) {
+                    //ignore images with links already
+                    continue;
+                }
+                // get the src
+                preg_match('/src="[^"]+/', $match, $matches2);
+                // get the filename
+                preg_match('/data-filename="[^\"]+/', $match, $matches3);
+                if (strstr($matches2[0], 'data:')) {
+                    $parts = explode(",", $matches2[0]);
+                    $basename = $matches3[0] ?? 'basename.jpg';
+                    $basename = str_replace('data-filename="', "", $basename);
+                    $filename = $folder . "img_" . sha1(rand(0, 9999999999)) . $basename;
+                    $new_content = str_replace($parts[0] . "," . $parts[1], 'src="' . $filename, $new_content);
+                    file_put_contents($filename, base64_decode($parts[1]));
+                    //resize image
+                    $image_class->resize($filename, 1000);
+                }
+            }
+        }
+        return $new_content;
+    }
+
+    
