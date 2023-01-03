@@ -172,7 +172,7 @@
                     $parts = explode(",", $matches2[0]);
                     $basename = $matches3[0] ?? 'basename.jpg';
                     $basename = str_replace('data-filename="', "", $basename);
-                    $filename = $folder . "img_" . sha1(rand(0, 9999999999)) . $basename;
+                    $filename = $folder . "img_" . sha1(random_int(0, 9999999999)) . $basename;
                     $new_content = str_replace($parts[0] . "," . $parts[1], 'src="' . $filename, $new_content);
                     file_put_contents($filename, base64_decode($parts[1]));
                     //resize image
