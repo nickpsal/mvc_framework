@@ -148,6 +148,20 @@
         return date("jS M, Y",strtotime($date));
     }
 
+    /** comverts image paths from relative to absolute **/
+    function add_root_to_images($contents){
+        preg_match_all('/<img[^>]+>/', $contents, $matches);
+        if (is_array($matches) && count($matches) > 0) {
+            foreach ($matches[0] as $match) {
+                preg_match('/src="[^"]+/', $match, $matches2);
+                if (!strstr($matches2[0], 'http')) {
+                    $contents = str_replace($matches2[0], 'src="' . ROOT . '/' . str_replace('src="', "", $matches2[0]), $contents);
+                }
+            }
+        }
+        return $contents;
+    }
+
     /** converts images from text editor content to actual files **/
     function remove_images_from_content($content, $folder = "uploads/"){
         if (!file_exists($folder)) {
@@ -183,4 +197,79 @@
         return $new_content;
     }
 
-    
+    /** deletes images from text editor content **/
+    function delete_images_from_content(string $content, string $content_new = ''): void {
+        //delete images from content
+        if (empty($content_new)) {
+            preg_match_all('/<img[^>]+>/', $content, $matches);
+            if (is_array($matches) && count($matches) > 0) {
+                foreach ($matches[0] as $match) {
+
+                    preg_match('/src="[^"]+/', $match, $matches2);
+                    $matches2[0] = str_replace('src="', "", $matches2[0]);
+
+                    if (file_exists($matches2[0])) {
+                        unlink($matches2[0]);
+                    }
+                }
+            }
+        } else {
+            //compare old to new and delete from old what inst in the new
+            preg_match_all('/<img[^>]+>/', $content, $matches);
+            preg_match_all('/<img[^>]+>/', $content_new, $matches_new);
+            $old_images = [];
+            $new_images = [];
+            /** collect old images **/
+            if (is_array($matches) && count($matches) > 0) {
+                foreach ($matches[0] as $match) {
+                    preg_match('/src="[^"]+/', $match, $matches2);
+                    $matches2[0] = str_replace('src="', "", $matches2[0]);
+                    if (file_exists($matches2[0])) {
+                        $old_images[] = $matches2[0];
+                    }
+                }
+            }
+            /** collect new images **/
+            if (is_array($matches_new) && count($matches_new) > 0) {
+                foreach ($matches_new[0] as $match) {
+                    preg_match('/src="[^"]+/', $match, $matches2);
+                    $matches2[0] = str_replace('src="', "", $matches2[0]);
+
+                    if (file_exists($matches2[0])) {
+                        $new_images[] = $matches2[0];
+                    }
+                }
+            }
+            /** compare and delete all that dont appear in the new array **/
+            foreach ($old_images as $img) {
+                if (!in_array($img, $new_images)) {
+                    if (file_exists($img)) {
+                        unlink($img);
+                    }
+                }
+            }
+        }
+    }
+
+    /** return URL variables **/
+    function URL($key):mixed {
+        $URL = $_GET['url'] ?? 'home';
+        $URL = explode("/", trim($URL,"/"));
+        switch ($key) {
+            case 'page':
+            case 0:
+                return $URL[0] ?? null;
+            case 'section':
+            case 'slug':
+            case 1:
+                return $URL[1] ?? null;
+            case 'action':
+            case 2:
+                return $URL[2] ?? null;
+            case 'id':
+            case 3:
+                return $URL[3] ?? null;
+            default:
+                return null;
+        }
+    }
