@@ -32,6 +32,15 @@
         }
     }
 
+    function check_if_current_page($m) {
+        $current_page = basename($_SERVER['REQUEST_URI']);
+        if ($current_page == $m) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     function check_min_php_version(){
         /**  Valid PHP Version? **/
         $minPHPVersion = '8.0';
